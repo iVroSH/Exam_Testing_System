@@ -8,6 +8,7 @@ using namespace std;
 #include<Windows.h>
 #include <windows.h>
 
+#include<algorithm>
 #include<string>
 #include <vector>
 #include<list>
