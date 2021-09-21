@@ -38,20 +38,46 @@ void ru() {
 	SetConsoleOutputCP(866);
 }
 //////////////////////////////////////////////////////
+
+void StringSymbolFilter(string& str, string filter= "!@#$%^&*()-=_+[]{};:\'\"\\|,./<>?`~") {
+	bool flag;
+	string buff = "";
+	for (size_t i = 0; i < str.size(); i++) {
+		flag = true;
+		for (size_t j = 0; j < filter.size(); j++) {
+			if (str[i] == filter[j]) {
+				flag = false;
+				break;
+			}
+		}
+		if (flag)buff += str[i];
+	}
+	str = buff;
+}
 string getFixLenStr(int len, bool protect = 0) {
 	string buff;
-	bool stop = 0;
+	bool stop = FALSE;
 	char in;
 	do {
 		while (buff.size() < len) {
 			in = _getch();
-			SetColor(0, 8);
-			if (protect)cout << '*'; else cout << in;
-			SetColor(7, 0);
-				if (in == 13) {
-					stop = 1; break;
+			if (in == 8) {
+				if (buff.size() > 0)
+				{
+					buff.pop_back();
+					SetColor(0, 7); cout << "\b \b";
 				}
-			buff.push_back(in);
+				else continue;
+			}
+			else {
+				SetColor(0, 7);
+				if (protect)cout << '*'; else cout << in;
+				SetColor(7, 0);
+				if (in == 13) {
+					stop = TRUE; break;
+				}
+				buff.push_back(in);
+			}
 		}
 	} while (!stop && _getch() != 13);
 	return buff;

@@ -149,6 +149,10 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Question.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="885536276.txt" />
+    <Text Include="text.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
