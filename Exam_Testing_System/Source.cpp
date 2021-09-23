@@ -1,11 +1,6 @@
 #include"include.h"
 
 int main() {
-	ofstream out("qwertyAnswer.txt");
-	out << endl << "C++";
-	out << endl << "C#";
-	out << endl << "Pascal :D";
-	out.close();
 	SetConsoleCP(866);
 	SetConsoleOutputCP(866);
 	Account acc;
