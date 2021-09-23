@@ -1,0 +1,4 @@
+
+int a=5; a++; a=?
+int a=17; a--; a=?
+Yes

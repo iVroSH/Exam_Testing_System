@@ -195,7 +195,8 @@ public:
 						in >> Name;
 						in >> Otchestvo;
 
-						
+						Exam exam;
+						exam.menu();
 						ru();
 					return;
 					}
@@ -232,7 +233,7 @@ public:
 			{
 			case 0:createAcc(); break;
 			case 1:loadAcc(); break;
-			case 2: break;
+			case 2:exit(0); break;
 			default:
 				break;
 			}

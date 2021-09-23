@@ -1,65 +1,111 @@
 #pragma once
 
 struct Answer {
-public:
-	Answer(string st, size_t val) :str(st), value(val) {}
-	Answer(){}
-	string str;
-	size_t value;
-};
-
-class Question {
-public:
-	string str;
-	bool flag = false;
-	int answer_count = 0, true_answer_count = 0;
-	map<int, Answer> answers;
-	Question(){}
-	Question(string st):str(st) {}
-
-	void insert_answer(string &&st, size_t &&val) {
-		answer_count++;
-		true_answer_count += (val)?val:0;
-		answers[answer_count] = Answer(st,val);
-	}
-
-	void print() {
-		cout << "________________________________" << endl;
-		cout << str<<endl;
-		cout << "--------------------------------" << endl;
-		for (auto i : answers) {
-			cout << i.first<<") "<<i.second.str << endl;
+	vector<string> answers;
+	vector<int> value;
+	void menu(string &exam,string &question, string &question2) {
+		//-------------------------------//
+		ifstream in(exam+question2 + "Answer.txt");
+		//-------------------------------//
+		char buff[64];
+		in.get();
+		while (!in.eof()) {
+			in.getline(buff, 64);
+			answers.push_back(buff);
+			in.getline(buff, 64);
+			value.push_back(atoi(buff));
 		}
-		cout << "________________________________" << endl;
+		answers.push_back("Exit");
+		in.close();
+		Menu MenuSelectExam;
+		MenuSelectExam.textLeft = answers;
+		do
+		{
+		ru();
+		int inPos = MenuSelectExam.select_vertical("  "+question+"  ");
+		if (inPos == answers.size() - 1) { Menu::lvl -= 2; ru(); return ; }
+		ru();
+		} while (true);
 	}
 };
 
-class Theme{
-public:
-	string str;
-	int qCount = 0;
-	Theme(string&& st) :str(st) {}
-	map<int, Question> questions;
-	void insert_question(string &&st) {
-		questions[qCount++] = st;
-		qCount++;
-	}
-
-	void print(int a) {
-		cout << "================================" << endl;
-		cout << str << endl;
-		questions[a].print();
-		cout << "================================" << endl;
+struct Question {
+	vector<string> questions;
+	void menu(string& exam) {
+		//-------------------------------//
+		ifstream in(exam + "Questions.txt");
+		//-------------------------------//
+		char buff[64];
+		in.get();
+		while (!in.eof()) {
+			in.getline(buff, 64);
+			questions.push_back(buff);
+		}
+		in.close();
+		Menu MenuSelectExam;
+		for (size_t i = 0; i < questions.size(); i++)
+		{
+			MenuSelectExam.textLeft.push_back("Вопрос" + to_string(i + 1));
+		}
+		MenuSelectExam.textLeft.push_back("Exit");
+		do
+		{
+		int inPos = MenuSelectExam.select_vertical("   "+exam+"   ");
+		ru();
+			Answer answer;
+			if (inPos == MenuSelectExam.textLeft.size() - 1) { Menu::lvl -= 2; ru(); return; }
+			answer.menu(exam,questions[inPos],MenuSelectExam.textLeft[inPos]);
+		ru();
+		Menu::lvl--;
+		} while (true);
 	}
 };
 
-class Subject {
-	string str;
-	map<int, Theme> themes;
-	size_t tCount;
-};
 
-class Exam {
-	vector<Theme> subjects;
-	size_t sCount;
+struct Exam {
+	vector<string> exams;
+	
+	void update() {
+		ifstream in("Exams.txt");
+		//-------------------------------//
+		char buff[64];
+		in.get();
+		while (!in.eof()) {
+			in.getline(buff, 64);
+			exams.push_back(buff);
+		}
+		exams.push_back("Exit");
+		in.close();
+	}
+
+	void addExam() {
+		ofstream out("Exams.txt", ios_base::app);
+		string buff;
+		buff = getFixLenStr(30);
+		ofstream in(buff+".txt");
+		out << endl << buff;
+		out.close();
+		out.open(buff + ".txt");
+		out.close();
+		
+		
+	}
+
+	void menu() {
+		//-------------------------------//
+		update();
+		Menu MenuSelectExam;
+		MenuSelectExam.textLeft = exams;
+
+		do
+		{
+		ru();
+		int inPos = MenuSelectExam.select_vertical("         Экзамены         ");
+		gotoxy(MenuSelectExam.x + Menu::lvl + 23, MenuSelectExam.y + Menu::lvl + inPos + 5);
+		if (inPos == exams.size() - 1) { ru(); return; }
+			Question questions;
+			questions.menu(exams[inPos]);
+		ru();
+		} while (true);
+	}
 };
